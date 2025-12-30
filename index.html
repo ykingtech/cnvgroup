@@ -1,437 +1,515 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNV GROUP - Real Simulation</title>
+    <title>CNV GROUP | Official Business Hub</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+Sinhala:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: 'Roboto', 'Noto Sans Sinhala', sans-serif; margin: 0; padding: 0; overflow-x: hidden; background: #000; }
+        body { font-family: 'Outfit', 'Noto Sans Sinhala', sans-serif; overflow-x: hidden; }
         
-        /* App Containers */
-        .app-shell { max-width: 450px; margin: 0 auto; min-height: 100vh; position: relative; overflow-y: auto; overflow-x: hidden; }
+        /* Background & Gradients */
+        .hero-bg { background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); }
+        .text-gradient { background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* PHONE MOCKUP */
+        .phone-frame {
+            width: 380px;
+            height: 760px;
+            background: #1e293b;
+            border-radius: 45px;
+            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255,255,255,0.1);
+            padding: 12px;
+            position: relative;
+            margin: auto;
+            border: 4px solid #334155;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
         
-        /* WhatsApp Styles */
-        .bg-whatsapp-home { background-color: #ffffff; }
+        /* 3D Hover Effect on Phone */
+        .phone-container:hover .phone-frame { transform: rotateY(-5deg) rotateX(5deg) translateY(-10px); }
+        
+        .phone-notch {
+            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 25px; background: #1e293b;
+            border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 50;
+        }
+        
+        .phone-screen {
+            width: 100%; height: 100%;
+            background: #fff; border-radius: 35px;
+            overflow: hidden; position: relative;
+        }
+
+        /* Vibrate Animation (For Notifications) */
+        @keyframes vibrate {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        .vibrate { animation: vibrate 0.3s linear infinite; }
+
+        /* Typing Cursor */
+        .cursor { display: inline-block; width: 3px; background-color: #2563eb; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* App Backgrounds */
         .bg-whatsapp-chat { background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
         
-        /* Telegram Styles */
-        .bg-telegram { background-color: #17212b; color: white; }
+        /* Animations */
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+        .pop-msg { animation: popMsg 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform: scale(0.5); opacity: 0; }
         
-        /* Facebook Styles */
-        .bg-facebook { background-color: #f0f2f5; }
-        
-        /* Instagram Styles */
-        .bg-instagram { background-color: white; }
-        .story-ring { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 2px; border-radius: 50%; }
+        @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes popMsg { to { transform: scale(1); opacity: 1; } }
 
-        /* Utilities */
-        .hidden { display: none !important; }
-        .animate-fade { animation: fadeIn 0.3s ease-out; }
-        .animate-slide-down { animation: slideDown 0.5s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* EASTER EGG STYLES */
+        .secret-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        .secret-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .hacker-text {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem; font-weight: bold;
+            color: #00ff00; /* Hacker Green */
+            text-shadow: 0 0 10px #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .kina-logo {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 2px solid #00ff00; box-shadow: 0 0 20px #00ff00;
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="hero-bg min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <button onclick="window.location.reload()" class="fixed top-2 right-2 z-50 bg-white/20 backdrop-blur text-white text-xs px-2 py-1 rounded border border-white/30 hover:bg-white/40">
-        Next Theme ↻
-    </button>
+    <div id="easter-egg" class="secret-overlay">
+        <div class="kina-logo flex items-center justify-center bg-black text-green-500 font-bold text-3xl">K</div>
+        <br>
+        <div class="hacker-text">SYSTEM HACKED...</div>
+        <div class="text-white font-mono text-xl tracking-widest text-center">DESIGNED BY THE KINA</div>
+    </div>
 
-    <div id="root"></div>
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col md:flex-row items-center gap-12 py-12 md:py-20">
+        
+        <div class="flex-1 text-center md:text-left space-y-8 z-10">
+            
+            <div class="inline-flex items-center gap-2 bg-white px-4 py-1.5 rounded-full shadow-sm border border-slate-200 fade-in-up" style="animation-delay: 0.1s;">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span class="text-xs font-bold text-slate-600 tracking-wide uppercase">Online | Sri Lanka</span>
+            </div>
+
+            <div class="space-y-2 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="flex items-center justify-center md:justify-start gap-4">
+                    <img src="logo.png" alt="CNV Logo" class="w-16 h-16 object-contain drop-shadow-lg">
+                    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">CNV GROUP</h1>
+                </div>
+                <p class="text-xs font-bold text-blue-600 tracking-[0.2em] uppercase pl-20 hidden md:block">Official Business Hub</p>
+            </div>
+
+            <h2 class="text-5xl md:text-7xl font-extrabold leading-tight fade-in-up" style="animation-delay: 0.3s;">
+                Your Hub for <br>
+                <span class="text-gradient">
+                    <span id="typing-text"></span><span class="cursor">&nbsp;</span>
+                </span>
+            </h2>
+            
+            <p class="text-lg text-slate-500 max-w-xl mx-auto md:mx-0 leading-relaxed fade-in-up" style="animation-delay: 0.4s;">
+                Sri Lanka's premier destination for reliable 
+                <span class="font-bold text-slate-700">Real Estate</span>, 
+                <span class="font-bold text-slate-700">Vehicle Trading</span>, and 
+                <span class="font-bold text-slate-700">Car Audio</span> solutions.
+                Experience seamless service across all platforms.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 fade-in-up" style="animation-delay: 0.5s;">
+                <a href="https://cnvlands.com" target="_blank" class="p-4 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3 hover:shadow-md hover:border-blue-200 transition group">
+                    <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 group-hover:scale-110 transition"><i class="fas fa-home"></i></div>
+                    <div class="text-left"><p class="text-xs text-slate-400 uppercase font-bold">Buy</p><p class="font-bold text-sm">Lands</p></div>
+                </a>
+                <a href="https://cnvcars.com" target="_blank" class="p-4 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3 hover:shadow-md hover:border-blue-200 transition group">
+                    <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 group-hover:scale-110 transition"><i class="fas fa-car"></i></div>
+                    <div class="text-left"><p class="text-xs text-slate-400 uppercase font-bold">Trade</p><p class="font-bold text-sm">Cars</p></div>
+                </a>
+                <a href="#" class="p-4 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3 hover:shadow-md hover:border-blue-200 transition group">
+                    <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 group-hover:scale-110 transition"><i class="fas fa-music"></i></div>
+                    <div class="text-left"><p class="text-xs text-slate-400 uppercase font-bold">Shop</p><p class="font-bold text-sm">Audio</p></div>
+                </a>
+            </div>
+
+            <div class="text-xs text-slate-400 pt-4 italic fade-in-up" style="animation-delay: 0.6s;">
+                * Refresh the page to see how we connect on different apps ↻
+            </div>
+        </div>
+
+        <div class="flex-1 relative w-full flex justify-center phone-container perspective-1000">
+            <div class="absolute top-20 right-10 w-40 h-40 bg-blue-500 rounded-full blur-[80px] opacity-20 animate-pulse"></div>
+            <div class="absolute bottom-20 left-10 w-40 h-40 bg-purple-500 rounded-full blur-[80px] opacity-20 animate-pulse" style="animation-delay: 1s"></div>
+
+            <div id="main-phone" class="phone-frame">
+                <div class="phone-notch"></div>
+                <div id="phone-screen" class="phone-screen bg-white no-scrollbar overflow-y-auto">
+                    </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="bg-slate-900 text-white border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center font-bold">C</div>
+                        <span class="font-extrabold text-xl">CNV GROUP</span>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+                        Providing excellence in Real Estate, Automotive Trading, and Premium Car Audio systems. 
+                        Your trusted partner in Sri Lanka.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-slate-200 mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="https://cnvlands.com" class="hover:text-blue-400 transition">Real Estate</a></li>
+                        <li><a href="https://cnvcars.com" class="hover:text-blue-400 transition">Auto Sales</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Car Audio</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-slate-200 mb-4 uppercase text-xs tracking-wider">Contact Us</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li class="flex items-center gap-2"><i class="fas fa-phone text-blue-500"></i> 07x - xxx xxxx</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-envelope text-blue-500"></i> info@cnvgroup.com</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-blue-500"></i> Kurunegala, Sri Lanka</li>
+                    </ul>
+                    <div class="flex gap-4 mt-4">
+                        <a href="#" class="text-slate-400 hover:text-white transition"><i class="fab fa-facebook text-lg"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white transition"><i class="fab fa-instagram text-lg"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white transition"><i class="fab fa-whatsapp text-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
+                <p>&copy; 2025 CNV GROUP. All rights reserved.</p>
+                <p>Designed with <i class="fas fa-heart text-red-500"></i> for Business.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // --- DATA ---
-        const links = { land: "https://cnvlands.com", car: "https://cnvcars.com", audio: "#" };
-        
-        // --- RENDERERS ---
+        // CONFIG
+        const LOGO_SRC = "logo.png"; 
+        const links = { land: "https://ykingtech.github.io/cnvholdings/", car: "https://cnvcars.com", audio: "#" };
+        const msg = "Welcome to CNV Group! Select your service below 👇";
 
-        // ==========================
-        // 1. WHATSAPP SIMULATION
-        // ==========================
-        function renderWhatsApp() {
-            const root = document.getElementById('root');
-            root.innerHTML = `
-                <div class="app-shell bg-whatsapp-home" id="wa-screen">
-                    <div class="bg-[#008069] text-white p-4 pb-2 shadow sticky top-0 z-10">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="font-bold text-xl">WhatsApp</span>
-                            <div class="flex gap-5 text-lg">
-                                <i class="fas fa-camera"></i>
-                                <i class="fas fa-search"></i>
-                                <i class="fas fa-ellipsis-v"></i>
-                            </div>
-                        </div>
-                        <div class="flex text-sm font-bold text-[#b4d9d2] uppercase">
-                            <div class="w-8 flex justify-center"><i class="fas fa-users"></i></div>
-                            <div class="flex-1 text-center text-white border-b-2 border-white pb-2">Chats</div>
-                            <div class="flex-1 text-center pb-2">Status</div>
-                            <div class="flex-1 text-center pb-2">Calls</div>
-                        </div>
-                    </div>
+        // --- 1. EASTER EGG LOGIC (The Kina) ---
+        const secretCode = ['k', 'i', 'n', 'a'];
+        let inputSequence = [];
 
-                    <div id="wa-inbox" class="flex flex-col">
-                        <div class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                            <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-500"><i class="fas fa-user"></i></div>
-                            <div class="flex-1 border-b border-gray-100 pb-3">
-                                <div class="flex justify-between"><span class="font-bold text-gray-800">Amma ❤️</span><span class="text-xs text-gray-500">10:30 AM</span></div>
-                                <div class="text-sm text-gray-500 truncate">Kema kewa neda puthe?</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500"><i class="fas fa-users"></i></div>
-                            <div class="flex-1 border-b border-gray-100 pb-3">
-                                <div class="flex justify-between"><span class="font-bold text-gray-800">School Batch '15</span><span class="text-xs text-gray-500">Yesterday</span></div>
-                                <div class="text-sm text-gray-500 truncate">Kasun: Set wemu machan...</div>
-                            </div>
-                        </div>
-                         <div class="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                            <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600"><i class="fas fa-briefcase"></i></div>
-                            <div class="flex-1 border-b border-gray-100 pb-3">
-                                <div class="flex justify-between"><span class="font-bold text-gray-800">Work Group</span><span class="text-xs text-gray-500">Yesterday</span></div>
-                                <div class="text-sm text-gray-500 truncate">Boss: Meeting at 9 AM</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        window.addEventListener('keyup', (e) => {
+            inputSequence.push(e.key.toLowerCase());
+            inputSequence = inputSequence.slice(-4);
+            if (inputSequence.join('') === 'kina') {
+                triggerEasterEgg();
+            }
+        });
 
-            // Trigger "New Message" Animation
+        function triggerEasterEgg() {
+            const overlay = document.getElementById('easter-egg');
+            // const audio = new Audio('https://www.myinstants.com/media/sounds/metal-gear-solid-alert.mp3'); 
+            // audio.play().catch(e => {}); 
+            overlay.classList.add('active');
             setTimeout(() => {
-                const inbox = document.getElementById('wa-inbox');
-                const newChat = document.createElement('div');
-                newChat.className = "flex items-center gap-3 p-3 bg-[#e7fce3] cursor-pointer animate-slide-down border-l-4 border-[#25d366]";
-                newChat.onclick = () => openWaChat(); // Click to open chat
-                newChat.innerHTML = `
-                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#008069] font-bold text-lg border border-gray-200">C</div>
-                    <div class="flex-1 border-b border-gray-100 pb-3">
-                        <div class="flex justify-between"><span class="font-bold text-gray-900">CNV GROUP ✅</span><span class="text-xs text-[#25d366]">Just now</span></div>
-                        <div class="text-sm text-gray-800 font-semibold flex items-center gap-1">
-                            <i class="fas fa-camera text-xs text-gray-500"></i> Photo
-                            <span class="ml-auto bg-[#25d366] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">1</span>
-                        </div>
-                    </div>
-                `;
-                inbox.insertBefore(newChat, inbox.firstChild); // Add to top
-                
-                // Play notification sound (optional visual cue)
-                // navigator.vibrate(200); 
-            }, 1500);
+                overlay.classList.remove('active');
+                inputSequence = []; 
+            }, 3000);
         }
 
-        // Function to transition to Chat Screen
-        function openWaChat() {
-            const screen = document.getElementById('wa-screen');
-            screen.className = "app-shell bg-whatsapp-chat flex flex-col";
+        // --- 2. TYPING EFFECT SCRIPT ---
+        const words = ["Real Estate", "Luxury Cars", "Car Audio", "Investments"];
+        let i = 0;
+        let timer;
+
+        function typeWriter() {
+            const heading = document.getElementById("typing-text");
+            const word = words[i];
+            let j = 0;
+            let isDeleting = false;
+
+            function loop() {
+                heading.innerHTML = word.substring(0, j);
+                if (!isDeleting && j < word.length) {
+                    j++;
+                    setTimeout(loop, 100);
+                } else if (isDeleting && j > 0) {
+                    j--;
+                    setTimeout(loop, 50);
+                } else {
+                    isDeleting = !isDeleting;
+                    if (!isDeleting) {
+                        i = (i + 1) % words.length;
+                        setTimeout(typeWriter, 500);
+                        return;
+                    }
+                    setTimeout(loop, 2000);
+                }
+            }
+            loop();
+        }
+        typeWriter();
+
+
+        // --- 3. PHONE SHAKE FUNCTION ---
+        function shakePhone() {
+            const phone = document.getElementById('main-phone');
+            phone.classList.add('vibrate');
+            setTimeout(() => {
+                phone.classList.remove('vibrate');
+            }, 500); 
+        }
+
+
+        // --- 4. APP RENDERERS ---
+
+        function renderWhatsAppInbox() {
+            return `
+                <div class="w-full h-full bg-white flex flex-col font-sans">
+                    <div class="bg-[#008069] text-white p-4 pt-8 flex justify-between items-center shadow sticky top-0 z-10">
+                        <span class="font-bold text-xl">WhatsApp</span>
+                        <div class="flex gap-5 text-lg"><i class="fas fa-search"></i><i class="fas fa-ellipsis-v"></i></div>
+                    </div>
+                    <div class="flex text-xs font-bold text-[#008069] uppercase border-b shadow-sm">
+                        <div class="flex-1 text-center py-3 border-b-2 border-[#008069]">Chats</div>
+                        <div class="flex-1 text-center py-3 text-slate-400">Status</div>
+                        <div class="flex-1 text-center py-3 text-slate-400">Calls</div>
+                    </div>
+                    <div id="wa-list" class="flex-col flex">
+                        <div class="flex items-center gap-3 p-4 border-b border-gray-100 opacity-50">
+                            <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center"><i class="fas fa-user text-white"></i></div>
+                            <div class="flex-1"><div class="flex justify-between font-bold text-gray-800"><span>Mom ❤️</span><span class="text-xs font-normal">09:15</span></div><div class="text-sm text-gray-500">Call me...</div></div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 border-b border-gray-100 opacity-50">
+                            <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center"><i class="fas fa-briefcase text-blue-500"></i></div>
+                            <div class="flex-1"><div class="flex justify-between font-bold text-gray-800"><span>Work</span><span class="text-xs font-normal">Yesterday</span></div><div class="text-sm text-gray-500">Documents sent</div></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function triggerWhatsAppNotification() {
+            shakePhone(); // <--- SHAKE EFFECT
+            
+            const list = document.getElementById('wa-list');
+            const newItem = document.createElement('div');
+            newItem.className = "flex items-center gap-3 p-4 bg-[#e7fce3] cursor-pointer border-l-4 border-[#25d366] pop-msg";
+            newItem.onclick = openWhatsAppChat;
+            newItem.innerHTML = `
+                <img src="${LOGO_SRC}" class="w-12 h-12 rounded-full border border-gray-200 object-contain bg-white">
+                <div class="flex-1">
+                    <div class="flex justify-between"><span class="font-bold text-black">CNV GROUP ✅</span><span class="text-xs text-[#25d366] font-bold">Now</span></div>
+                    <div class="text-sm text-gray-800 font-semibold flex items-center gap-1">
+                        👋 Welcome to CNV Group...
+                        <span class="ml-auto bg-[#25d366] text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center">1</span>
+                    </div>
+                </div>
+            `;
+            list.insertBefore(newItem, list.firstChild);
+        }
+
+        function openWhatsAppChat() {
+            const screen = document.getElementById('phone-screen');
             screen.innerHTML = `
-                 <div class="bg-[#008069] text-white p-2 flex items-center gap-2 shadow sticky top-0 z-10">
-                    <i class="fas fa-arrow-left p-2 cursor-pointer" onclick="window.location.reload()"></i>
-                    <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#008069] font-bold">C</div>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-sm">CNV GROUP ✅</h3>
-                        <p class="text-[10px] text-white/80">Business Account</p>
+                <div class="w-full h-full bg-whatsapp-chat flex flex-col">
+                    <div class="bg-[#008069] text-white p-2 pt-8 flex items-center gap-2 shadow sticky top-0 z-10">
+                        <i class="fas fa-arrow-left p-2 cursor-pointer" onclick="location.reload()"></i>
+                        <img src="${LOGO_SRC}" class="w-9 h-9 rounded-full bg-white p-0.5 object-contain">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-sm">CNV GROUP ✅</h3>
+                            <p class="text-[10px]">Business Account</p>
+                        </div>
+                        <i class="fas fa-video p-2"></i><i class="fas fa-phone p-2"></i>
                     </div>
-                    <i class="fas fa-video p-2"></i>
-                    <i class="fas fa-phone p-2"></i>
-                    <i class="fas fa-ellipsis-v p-2"></i>
-                </div>
-                <div class="flex-1 p-3 flex flex-col gap-2" id="wa-msgs">
-                    <div class="bg-[#ffeecd] text-[10px] text-center p-2 rounded mb-4 opacity-80 self-center shadow-sm">
-                        Business Account. Chat with us about Land, Vehicles & Audio.
-                    </div>
-                    <div class="bg-white p-2 rounded-lg rounded-tl-none self-start shadow-sm max-w-[80%] text-sm">
-                        ආයුබෝවන්! Welcome to CNV Group Official. 🙏
-                        <span class="text-[10px] text-gray-400 block text-right mt-1">Now</span>
-                    </div>
-                     <div class="bg-white p-2 rounded-lg rounded-tl-none self-start shadow-sm max-w-[80%] text-sm">
-                        ඔබට අද අපෙන් අවශ්‍ය මොනවාද? 👇
-                        <span class="text-[10px] text-gray-400 block text-right mt-1">Now</span>
-                    </div>
-                    <div class="flex flex-col gap-2 mt-2">
-                         <button onclick="window.location.href='${links.land}'" class="bg-white text-[#008069] font-bold py-2 rounded shadow-sm text-sm hover:bg-gray-50">🏠 Real Estate (ඉඩම්)</button>
-                         <button onclick="window.location.href='${links.car}'" class="bg-white text-[#008069] font-bold py-2 rounded shadow-sm text-sm hover:bg-gray-50">🚗 Auto Sales (වාහන)</button>
-                         <button onclick="window.location.href='${links.audio}'" class="bg-white text-[#008069] font-bold py-2 rounded shadow-sm text-sm hover:bg-gray-50">🎵 Car Audio (සවුන්ඩ්)</button>
+                    <div class="flex-1 p-3 flex flex-col gap-2 overflow-y-auto pb-20">
+                        <div class="bg-[#ffeecd] text-[10px] text-center p-2 rounded mb-2 shadow opacity-80 self-center">Messages are end-to-end encrypted.</div>
+                        <div class="bg-white p-2 rounded-lg rounded-tl-none shadow max-w-[85%] self-start text-sm pop-msg">
+                            Ayubowan! Welcome to CNV Group Official. 🙏
+                        </div>
+                        <div class="bg-white p-2 rounded-lg rounded-tl-none shadow max-w-[85%] self-start text-sm mt-1 pop-msg" style="animation-delay: 0.5s">
+                            ${msg}
+                            <div class="grid gap-2 mt-3">
+                                <button onclick="window.open('${links.land}')" class="bg-white border border-[#008069] text-[#008069] py-2.5 rounded-lg font-bold text-sm hover:bg-[#e7fce3] flex items-center justify-center gap-2"><i class="fas fa-home"></i> Real Estate</button>
+                                <button onclick="window.open('${links.car}')" class="bg-white border border-[#008069] text-[#008069] py-2.5 rounded-lg font-bold text-sm hover:bg-[#e7fce3] flex items-center justify-center gap-2"><i class="fas fa-car"></i> Auto Sales</button>
+                                <button onclick="window.open('${links.audio}')" class="bg-white border border-[#008069] text-[#008069] py-2.5 rounded-lg font-bold text-sm hover:bg-[#e7fce3] flex items-center justify-center gap-2"><i class="fas fa-music"></i> Car Audio</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
+        // --- TELEGRAM LOGIC ---
+        function renderTelegramInbox() {
+            return `
+                <div class="w-full h-full bg-[#17212b] flex flex-col text-white">
+                    <div class="bg-[#17212b] p-4 pt-8 flex items-center gap-4 shadow-md sticky top-0 z-10">
+                        <i class="fas fa-bars"></i>
+                        <span class="font-bold text-lg flex-1">Telegram</span>
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div id="tg-list" class="flex flex-col">
+                        <div class="flex items-center gap-3 p-3 opacity-50 border-b border-black/20">
+                            <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center font-bold">N</div>
+                            <div class="flex-1"><div class="flex justify-between font-bold"><span>News 1st</span><span class="text-xs text-gray-400">09:00</span></div><div class="text-sm text-gray-400">Breaking...</div></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-        // ==========================
-        // 2. FACEBOOK SIMULATION
-        // ==========================
+        function triggerTelegramNotification() {
+            shakePhone(); // <--- SHAKE EFFECT
+            const list = document.getElementById('tg-list');
+            const newItem = document.createElement('div');
+            newItem.className = "flex items-center gap-3 p-3 bg-[#202b36] cursor-pointer border-l-2 border-blue-400 pop-msg";
+            newItem.onclick = openTelegramChat;
+            newItem.innerHTML = `
+                <div class="w-12 h-12 rounded-full bg-[#17212b] border border-gray-600 flex items-center justify-center"><img src="${LOGO_SRC}" class="w-full h-full rounded-full object-contain"></div>
+                <div class="flex-1">
+                    <div class="flex justify-between"><span class="font-bold text-white">CNV BOT 🤖</span><span class="text-xs text-blue-400">Now</span></div>
+                    <div class="text-sm text-white font-semibold">Hello! Tap to start...</div>
+                    <span class="bg-blue-500 text-white text-[10px] px-1.5 rounded-full float-right">1</span>
+                </div>
+            `;
+            list.insertBefore(newItem, list.firstChild);
+        }
+
+        function openTelegramChat() {
+            const screen = document.getElementById('phone-screen');
+            screen.innerHTML = `
+                <div class="w-full h-full bg-[#0f172a] flex flex-col text-white">
+                    <div class="bg-[#17212b] p-3 pt-8 flex items-center gap-4 shadow sticky top-0 z-10">
+                        <i class="fas fa-arrow-left text-gray-400 cursor-pointer" onclick="location.reload()"></i>
+                        <img src="${LOGO_SRC}" class="w-10 h-10 rounded-full bg-[#17212b] p-0.5 object-contain">
+                        <div class="flex-1"><h3 class="font-bold">CNV Group Bot</h3><p class="text-xs text-blue-400">bot</p></div>
+                        <i class="fas fa-ellipsis-v text-gray-400"></i>
+                    </div>
+                    <div class="flex-1 p-4 flex flex-col gap-2" style="background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 15px 15px;">
+                        <div class="bg-[#1e293b] p-3 rounded-xl rounded-tl-none self-start max-w-[90%] text-sm shadow pop-msg">
+                            Welcome! Please choose a category:
+                            <div class="grid gap-2 mt-3">
+                                <button onclick="window.open('${links.land}')" class="bg-[#2b5278] hover:bg-[#386ba1] p-3 rounded-lg text-left text-sm font-bold shadow-sm flex items-center gap-2">🏠 Real Estate</button>
+                                <button onclick="window.open('${links.car}')" class="bg-[#2b5278] hover:bg-[#386ba1] p-3 rounded-lg text-left text-sm font-bold shadow-sm flex items-center gap-2">🚗 Auto Sales</button>
+                                <button onclick="window.open('${links.audio}')" class="bg-[#2b5278] hover:bg-[#386ba1] p-3 rounded-lg text-left text-sm font-bold shadow-sm flex items-center gap-2">🎵 Car Audio</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- FACEBOOK & INSTAGRAM (Static Feed) ---
         function renderFacebook() {
-            const root = document.getElementById('root');
-            root.innerHTML = `
-                <div class="app-shell bg-facebook">
-                    <div class="bg-white p-3 shadow-sm sticky top-0 z-20 flex justify-between text-[#1877f2]">
+            return `
+                <div class="w-full h-full bg-[#f0f2f5] flex flex-col pt-6 font-sans">
+                    <div class="bg-white p-4 shadow-sm flex justify-between text-[#1877f2] items-center">
                         <h1 class="font-black text-2xl">facebook</h1>
-                        <div class="flex gap-3 text-lg bg-gray-100 w-8 h-8 rounded-full items-center justify-center text-black"><i class="fas fa-search"></i></div>
+                        <i class="fas fa-search bg-gray-100 p-2 rounded-full text-black"></i>
                     </div>
-                    
-                    <div class="bg-white mt-2 p-4 flex gap-3 overflow-x-auto">
-                        <div class="flex-shrink-0 w-24 h-40 bg-gray-800 rounded-xl relative overflow-hidden">
-                            <img src="https://source.unsplash.com/random/200x300/?car" class="w-full h-full object-cover opacity-60">
-                            <div class="absolute bottom-2 left-2 text-white font-bold text-xs">Your Story</div>
-                            <div class="absolute top-2 left-2 w-8 h-8 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center text-white"><i class="fas fa-plus"></i></div>
-                        </div>
-                         <div class="flex-shrink-0 w-24 h-40 bg-gray-200 rounded-xl overflow-hidden relative border border-gray-300">
-                             <img src="https://source.unsplash.com/random/200x300/?house" class="w-full h-full object-cover">
-                             <div class="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-blue-500 bg-white overflow-hidden p-0.5">
-                                <div class="w-full h-full bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-[10px]">C</div>
-                             </div>
-                             <div class="absolute bottom-2 left-2 text-white font-bold text-xs shadow-black drop-shadow-md">CNV Group</div>
-                         </div>
-                    </div>
-
-                    <div class="bg-white mt-2 p-3 shadow-sm animate-fade">
+                    <div class="mt-2 bg-white p-4 shadow-sm pop-msg">
                         <div class="flex items-center gap-2 mb-3">
-                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">C</div>
-                            <div>
-                                <h3 class="font-bold text-sm text-gray-900">CNV GROUP <i class="fas fa-check-circle text-blue-500 text-xs"></i></h3>
-                                <p class="text-xs text-gray-500">Sponsored · <i class="fas fa-globe-americas"></i></p>
-                            </div>
-                            <i class="fas fa-ellipsis-h ml-auto text-gray-500"></i>
+                            <img src="${LOGO_SRC}" class="w-10 h-10 rounded-full border p-0.5 object-contain">
+                            <div><h3 class="font-bold text-sm">CNV GROUP <i class="fas fa-check-circle text-blue-500"></i></h3><p class="text-xs text-gray-500">Sponsored</p></div>
                         </div>
-                        <p class="text-sm mb-3">ඔබ සොයන්නේ විශ්වාසවන්ත වාහනයක් හෝ ඉඩමක්ද? 🏡🚗 <br>අඩුම මිලට හොඳම තැන CNV Group.</p>
-                        
-                        <div class="grid grid-cols-1 gap-2">
-                             <button onclick="window.location.href='${links.land}'" class="bg-blue-50 p-3 rounded-lg border border-blue-100 flex items-center justify-between">
-                                <span class="font-bold text-blue-800"><i class="fas fa-home mr-2"></i> Real Estate</span>
-                                <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded">View</span>
-                             </button>
-                             <button onclick="window.location.href='${links.car}'" class="bg-blue-50 p-3 rounded-lg border border-blue-100 flex items-center justify-between">
-                                <span class="font-bold text-blue-800"><i class="fas fa-car mr-2"></i> Auto Sales</span>
-                                <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded">View</span>
-                             </button>
+                        <p class="text-sm mb-3 text-gray-800">Visit our official pages for the best deals! 🇱🇰</p>
+                        <div class="space-y-2">
+                            <button onclick="window.open('${links.land}')" class="w-full flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100 hover:bg-blue-100"><span class="font-bold text-blue-800 text-sm"><i class="fas fa-home mr-2"></i> Real Estate</span><i class="fas fa-chevron-right text-xs text-blue-400"></i></button>
+                            <button onclick="window.open('${links.car}')" class="w-full flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100 hover:bg-blue-100"><span class="font-bold text-blue-800 text-sm"><i class="fas fa-car mr-2"></i> Auto Sales</span><i class="fas fa-chevron-right text-xs text-blue-400"></i></button>
+                            <button onclick="window.open('${links.audio}')" class="w-full flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100 hover:bg-blue-100"><span class="font-bold text-blue-800 text-sm"><i class="fas fa-music mr-2"></i> Car Audio</span><i class="fas fa-chevron-right text-xs text-blue-400"></i></button>
                         </div>
-                        
-                        <div class="flex justify-between mt-3 pt-2 border-t text-gray-500 font-semibold text-sm">
-                            <span><i class="far fa-thumbs-up"></i> Like</span>
-                            <span><i class="far fa-comment"></i> Comment</span>
-                            <span><i class="fas fa-share"></i> Share</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-white mt-2 p-3 shadow-sm">
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
-                            <div>
-                                <div class="h-3 w-24 bg-gray-200 rounded mb-1"></div>
-                                <div class="h-2 w-16 bg-gray-200 rounded"></div>
-                            </div>
-                        </div>
-                        <div class="h-48 w-full bg-gray-200 rounded mb-2 flex items-center justify-center text-gray-400">Random Ad</div>
+                        <div class="flex justify-between mt-4 pt-3 border-t text-gray-500 text-sm"><span><i class="far fa-thumbs-up"></i> Like</span><span><i class="far fa-comment"></i> Comment</span><span><i class="fas fa-share"></i> Share</span></div>
                     </div>
                 </div>
             `;
         }
 
-        // ==========================
-        // 3. INSTAGRAM SIMULATION
-        // ==========================
         function renderInstagram() {
-            const root = document.getElementById('root');
-            root.innerHTML = `
-                <div class="app-shell bg-instagram flex flex-col">
-                    <div class="p-3 flex justify-between items-center sticky top-0 bg-white z-10 border-b">
+            return `
+                <div class="w-full h-full bg-white flex flex-col font-sans text-black">
+                    <div class="p-4 flex justify-between items-center border-b pt-8">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/800px-Instagram_logo.svg.png" class="h-8">
-                        <div class="flex gap-5 text-2xl">
-                            <i class="far fa-heart"></i>
-                            <i class="fab fa-facebook-messenger"></i>
-                        </div>
+                        <i class="fab fa-facebook-messenger text-2xl"></i>
                     </div>
-
-                    <div class="flex gap-4 p-3 overflow-x-auto border-b">
-                         <div class="flex flex-col items-center gap-1 min-w-[70px]">
-                            <div class="story-ring">
-                                <div class="w-16 h-16 bg-white rounded-full p-[2px]">
-                                    <div class="w-full h-full bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">C</div>
-                                </div>
-                            </div>
-                            <span class="text-xs truncate w-16 text-center">CNV Group</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 min-w-[70px]">
-                            <div class="story-ring">
-                                <div class="w-16 h-16 bg-white rounded-full p-[2px]">
-                                     <img src="https://source.unsplash.com/random/100x100/?face" class="w-full h-full rounded-full object-cover">
-                                </div>
-                            </div>
-                            <span class="text-xs truncate w-16 text-center">news_lk</span>
-                        </div>
-                         <div class="flex flex-col items-center gap-1 min-w-[70px]">
-                            <div class="story-ring">
-                                <div class="w-16 h-16 bg-white rounded-full p-[2px]">
-                                     <img src="https://source.unsplash.com/random/100x100/?sport" class="w-full h-full rounded-full object-cover">
-                                </div>
-                            </div>
-                            <span class="text-xs truncate w-16 text-center">sl_cricket</span>
-                        </div>
-                    </div>
-
-                    <div class="pb-4 animate-fade">
+                    <div class="flex-1 overflow-y-auto pop-msg">
                         <div class="flex items-center gap-2 p-3">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">C</div>
+                            <img src="${LOGO_SRC}" class="w-8 h-8 rounded-full border">
                             <span class="font-bold text-sm">cnv_group_official</span>
                             <i class="fas fa-ellipsis-h ml-auto"></i>
                         </div>
-                        
-                        <div class="bg-gradient-to-br from-blue-50 to-indigo-100 aspect-square flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
-                             <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-                             <h2 class="text-xl font-bold text-blue-900 mb-6 relative z-10">TAP TO VISIT 👇</h2>
-                             
-                             <button onclick="window.location.href='${links.land}'" class="w-full bg-white py-3 rounded-xl shadow-lg mb-3 font-bold text-blue-600 hover:scale-105 transition relative z-10">
-                                🏠 Real Estate
-                             </button>
-                             <button onclick="window.location.href='${links.car}'" class="w-full bg-white py-3 rounded-xl shadow-lg mb-3 font-bold text-blue-600 hover:scale-105 transition relative z-10">
-                                🚗 Auto Sales
-                             </button>
-                             <button onclick="window.location.href='${links.audio}'" class="w-full bg-white py-3 rounded-xl shadow-lg font-bold text-blue-600 hover:scale-105 transition relative z-10">
-                                🎵 Car Audio
-                             </button>
-                        </div>
-
-                        <div class="p-3">
-                            <div class="flex justify-between text-2xl mb-2">
-                                <div class="flex gap-4">
-                                    <i class="far fa-heart text-red-500"></i>
-                                    <i class="far fa-comment"></i>
-                                    <i class="far fa-paper-plane"></i>
-                                </div>
-                                <i class="far fa-bookmark"></i>
+                        <div class="w-full aspect-square bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-6 text-center">
+                            <h2 class="font-extrabold text-2xl text-blue-900 mb-6 tracking-tight">EXPLORE SERVICES</h2>
+                            <div class="w-full space-y-3">
+                                <button onclick="window.open('${links.land}')" class="w-full bg-white py-3 rounded-xl shadow-lg font-bold text-blue-600 hover:scale-105 transition text-sm flex items-center justify-center gap-2"><i class="fas fa-home"></i> Real Estate</button>
+                                <button onclick="window.open('${links.car}')" class="w-full bg-white py-3 rounded-xl shadow-lg font-bold text-blue-600 hover:scale-105 transition text-sm flex items-center justify-center gap-2"><i class="fas fa-car"></i> Auto Sales</button>
+                                <button onclick="window.open('${links.audio}')" class="w-full bg-white py-3 rounded-xl shadow-lg font-bold text-blue-600 hover:scale-105 transition text-sm flex items-center justify-center gap-2"><i class="fas fa-music"></i> Car Audio</button>
                             </div>
-                            <p class="text-sm"><span class="font-bold">cnv_group_official</span> The Best Place at the Lowest Price. Visit us today! #srilanka #carsale #land</p>
-                            <p class="text-xs text-gray-400 mt-1">5 MINUTES AGO</p>
                         </div>
-                    </div>
-
-                    <div class="pb-4 border-t">
-                         <div class="flex items-center gap-2 p-3">
-                            <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
-                            <span class="font-bold text-sm bg-gray-200 text-transparent rounded">User Name</span>
+                        <div class="p-3 space-y-2">
+                            <div class="flex justify-between text-2xl"><div class="flex gap-4"><i class="far fa-heart text-red-500"></i><i class="far fa-comment"></i></div><i class="far fa-bookmark"></i></div>
+                            <p class="text-sm"><span class="font-bold">cnv_group_official</span> Click buttons above to visit! ☝️</p>
                         </div>
-                        <div class="h-64 bg-gray-200"></div>
                     </div>
                 </div>
             `;
         }
 
-        // ==========================
-        // 4. TELEGRAM SIMULATION
-        // ==========================
-        function renderTelegram() {
-            const root = document.getElementById('root');
-            root.innerHTML = `
-                <div class="app-shell bg-telegram" id="tg-screen">
-                    <div class="bg-[#17212b] p-3 flex items-center gap-4 sticky top-0 z-10 shadow-md">
-                        <i class="fas fa-bars text-gray-400 text-lg"></i>
-                        <span class="font-bold text-lg flex-1">Telegram</span>
-                        <i class="fas fa-search text-gray-400 text-lg"></i>
-                    </div>
-
-                    <div id="tg-inbox" class="flex flex-col">
-                        <div class="flex items-center gap-3 p-3 hover:bg-[#202b36] cursor-pointer">
-                            <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center font-bold text-lg">N</div>
-                            <div class="flex-1 border-b border-black/20 pb-3">
-                                <div class="flex justify-between"><span class="font-bold text-white">News 1st</span><span class="text-xs text-gray-400">12:05</span></div>
-                                <div class="text-sm text-gray-400 truncate">Breaking News: Weather update...</div>
-                            </div>
-                        </div>
-                         <div class="flex items-center gap-3 p-3 hover:bg-[#202b36] cursor-pointer">
-                            <div class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center font-bold text-lg">C</div>
-                            <div class="flex-1 border-b border-black/20 pb-3">
-                                <div class="flex justify-between"><span class="font-bold text-white">Crypto Signals</span><span class="text-xs text-gray-400">09:00</span></div>
-                                <div class="text-sm text-gray-400 truncate">Bitcoin UP 🚀</div>
-                            </div>
-                        </div>
-                         <div class="flex items-center gap-3 p-3 hover:bg-[#202b36] cursor-pointer">
-                            <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center font-bold text-lg">M</div>
-                            <div class="flex-1 border-b border-black/20 pb-3">
-                                <div class="flex justify-between"><span class="font-bold text-white">Movie Group</span><span class="text-xs text-gray-400">Yesterday</span></div>
-                                <div class="text-sm text-gray-400 truncate">New link uploaded...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Trigger "New Message" Animation
-            setTimeout(() => {
-                const inbox = document.getElementById('tg-inbox');
-                const newChat = document.createElement('div');
-                newChat.className = "flex items-center gap-3 p-3 bg-[#202b36] cursor-pointer animate-slide-down border-l-2 border-blue-400";
-                newChat.onclick = () => openTgChat();
-                newChat.innerHTML = `
-                    <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center font-bold text-lg text-white">C</div>
-                    <div class="flex-1 border-b border-black/20 pb-3">
-                        <div class="flex justify-between"><span class="font-bold text-white">CNV GROUP BOT 🤖</span><span class="text-xs text-blue-400">Just now</span></div>
-                        <div class="text-sm text-white font-semibold">What can I help you with?</div>
-                        <span class="bg-blue-500 text-white text-[10px] px-1.5 rounded-full float-right mt-1">1</span>
-                    </div>
-                `;
-                inbox.insertBefore(newChat, inbox.firstChild);
-            }, 1500);
-        }
-
-        function openTgChat() {
-            const screen = document.getElementById('tg-screen');
-            screen.innerHTML = `
-                <div class="bg-[#17212b] p-3 flex items-center gap-4 sticky top-0 z-10 shadow-md">
-                    <i class="fas fa-arrow-left text-gray-400 cursor-pointer" onclick="window.location.reload()"></i>
-                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold text-white">C</div>
-                    <div class="flex-1">
-                        <h3 class="font-bold text-white">CNV GROUP BOT</h3>
-                        <p class="text-xs text-blue-400">bot</p>
-                    </div>
-                    <i class="fas fa-ellipsis-v text-gray-400"></i>
-                </div>
-                
-                <div class="flex-1 p-4 flex flex-col gap-2 overflow-y-auto" style="background-image: radial-gradient(#232e3c 10%, transparent 10%); background-size: 10px 10px;">
-                    <div class="bg-[#182533] p-3 rounded-lg rounded-tl-none self-start max-w-[80%] text-sm text-white shadow-sm">
-                        Welcome to CNV Group! Choose an option:
-                    </div>
-                    
-                    <div class="grid grid-cols-1 gap-2 mt-2">
-                        <button onclick="window.location.href='${links.land}'" class="bg-[#2b5278] p-3 rounded text-white font-bold text-sm text-left hover:bg-[#34608a]">🏠 Real Estate</button>
-                        <button onclick="window.location.href='${links.car}'" class="bg-[#2b5278] p-3 rounded text-white font-bold text-sm text-left hover:bg-[#34608a]">🚗 Auto Sales</button>
-                         <button onclick="window.location.href='${links.audio}'" class="bg-[#2b5278] p-3 rounded text-white font-bold text-sm text-left hover:bg-[#34608a]">🎵 Car Audio</button>
-                    </div>
-                </div>
-
-                <div class="bg-[#17212b] p-3 flex items-center gap-3 mt-auto">
-                    <i class="fas fa-paperclip text-gray-500 text-xl"></i>
-                    <div class="flex-1 bg-[#0e1621] rounded px-3 py-2 text-gray-500 text-sm">Message...</div>
-                    <i class="fas fa-microphone text-blue-500 text-xl"></i>
-                </div>
-            `;
-        }
-
-        // --- MAIN INITIALIZER ---
+        // --- MAIN INITIALIZATION ---
         function init() {
-            const themes = ['whatsapp', 'facebook', 'instagram', 'telegram'];
-            const selected = themes[Math.floor(Math.random() * themes.length)];
+            const apps = ['whatsapp', 'telegram', 'facebook', 'instagram'];
+            const screen = document.getElementById('phone-screen');
+            const selectedApp = apps[Math.floor(Math.random() * apps.length)];
             
-            // NOTE: For demonstration, you can comment out the randomizer above 
-            // and uncomment a specific line below to test one theme constantly.
-            
-            // const selected = 'whatsapp';
-            // const selected = 'telegram';
-            // const selected = 'facebook';
-            // const selected = 'instagram';
-
-            if(selected === 'whatsapp') renderWhatsApp();
-            else if(selected === 'facebook') renderFacebook();
-            else if(selected === 'instagram') renderInstagram();
-            else if(selected === 'telegram') renderTelegram();
+            if (selectedApp === 'whatsapp') {
+                screen.innerHTML = renderWhatsAppInbox();
+                setTimeout(triggerWhatsAppNotification, 1500); 
+            } else if (selectedApp === 'telegram') {
+                screen.innerHTML = renderTelegramInbox();
+                setTimeout(triggerTelegramNotification, 1500);
+            } else if (selectedApp === 'facebook') {
+                screen.innerHTML = renderFacebook();
+            } else if (selectedApp === 'instagram') {
+                screen.innerHTML = renderInstagram();
+            }
         }
 
-        init(); // Start!
+        window.onload = init;
 
     </script>
 </body>
